@@ -30,12 +30,6 @@ Handles feedback:
 
 ## 🗄️ Database Structure (Azure SQL)
 
-Schemas used:
-
-- `s20230535_chefs`
-- `s20230535_classes`
-- `s20230535_feedbacks`
-
 ### Tables:
 
 - chefs.chef
