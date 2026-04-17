@@ -4,8 +4,7 @@ from db import get_connection
 
 router = APIRouter()
 
-PREFIX = "s20230535"
-SCHEMA = f"{PREFIX}_classes"
+SCHEMA = "MikitaMalafei"
 
 
 class ClassCreate(BaseModel):
@@ -51,8 +50,8 @@ def create_class(c: ClassCreate):
     cursor = conn.cursor()
 
     cursor.execute(
-        f"INSERT INTO {SCHEMA}.class VALUES (?, ?, ?, ?, ?)",
-        (c.classId, c.title, c.chefId, c.date, c.capacity)
+    f"INSERT INTO {SCHEMA}.class VALUES (?, ?, ?, ?, ?)",
+    (c.classId, c.title, c.chefId, c.date, c.capacity)
     )
 
     conn.commit()

@@ -1,29 +1,19 @@
 from db import get_connection
 
-PREFIX = "s20230535"
+SCHEMA = "MikitaMalafei"
 
 conn = get_connection()
 cursor = conn.cursor()
 
 cursor.execute(f"""
-IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = '{PREFIX}_classes')
-EXEC('CREATE SCHEMA {PREFIX}_classes')
-""")
-
-cursor.execute(f"""
-IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = '{PREFIX}_chefs')
-EXEC('CREATE SCHEMA {PREFIX}_chefs')
-""")
-
-cursor.execute(f"""
-IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = '{PREFIX}_feedbacks')
-EXEC('CREATE SCHEMA {PREFIX}_feedbacks')
+IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = '{SCHEMA}')
+EXEC('CREATE SCHEMA {SCHEMA}')
 """)
 
 
 cursor.execute(f"""
-IF OBJECT_ID('{PREFIX}_chefs.chef', 'U') IS NULL
-CREATE TABLE {PREFIX}_chefs.chef (
+IF OBJECT_ID('{SCHEMA}.chef', 'U') IS NULL
+CREATE TABLE {SCHEMA}.chef (
     chefId INT PRIMARY KEY,
     name NVARCHAR(100),
     rating FLOAT
@@ -31,8 +21,8 @@ CREATE TABLE {PREFIX}_chefs.chef (
 """)
 
 cursor.execute(f"""
-IF OBJECT_ID('{PREFIX}_classes.class', 'U') IS NULL
-CREATE TABLE {PREFIX}_classes.class (
+IF OBJECT_ID('{SCHEMA}.class', 'U') IS NULL
+CREATE TABLE {SCHEMA}.class (
     classId INT PRIMARY KEY,
     title NVARCHAR(100),
     chefId INT,
@@ -42,8 +32,8 @@ CREATE TABLE {PREFIX}_classes.class (
 """)
 
 cursor.execute(f"""
-IF OBJECT_ID('{PREFIX}_classes.booking', 'U') IS NULL
-CREATE TABLE {PREFIX}_classes.booking (
+IF OBJECT_ID('{SCHEMA}.booking', 'U') IS NULL
+CREATE TABLE {SCHEMA}.booking (
     bookingId INT PRIMARY KEY,
     classId INT,
     userId INT,
@@ -52,8 +42,8 @@ CREATE TABLE {PREFIX}_classes.booking (
 """)
 
 cursor.execute(f"""
-IF OBJECT_ID('{PREFIX}_feedbacks.feedback', 'U') IS NULL
-CREATE TABLE {PREFIX}_feedbacks.feedback (
+IF OBJECT_ID('{SCHEMA}.feedback', 'U') IS NULL
+CREATE TABLE {SCHEMA}.feedback (
     feedbackId INT PRIMARY KEY,
     classId INT,
     rating INT,
@@ -61,20 +51,47 @@ CREATE TABLE {PREFIX}_feedbacks.feedback (
 )
 """)
 
+cursor.execute("""
+INSERT INTO MikitaMalafei.chef (chefId, name, rating)
+VALUES (1,'Gordon Ramsay',4.9)
+""")
 
-cursor.execute(f"INSERT INTO {PREFIX}_chefs.chef VALUES (1,'Gordon Ramsay',4.9)")
-cursor.execute(f"INSERT INTO {PREFIX}_chefs.chef VALUES (2,'Jamie Oliver',4.5)")
+cursor.execute("""
+INSERT INTO MikitaMalafei.chef (chefId, name, rating)
+VALUES (2,'Jamie Oliver',4.5)
+""")
 
-cursor.execute(f"INSERT INTO {PREFIX}_classes.class VALUES (1,'Italian Cooking',1,'2026-04-20',10)")
-cursor.execute(f"INSERT INTO {PREFIX}_classes.class VALUES (2,'Baking Basics',2,'2026-04-22',8)")
+cursor.execute("""
+INSERT INTO MikitaMalafei.class (classId, title, chefId, date, capacity)
+VALUES (1,'Italian Cooking',1,'2026-04-20',10)
+""")
 
-cursor.execute(f"INSERT INTO {PREFIX}_classes.booking VALUES (1,1,101,'active')")
-cursor.execute(f"INSERT INTO {PREFIX}_classes.booking VALUES (2,2,102,'cancelled')")
+cursor.execute("""
+INSERT INTO MikitaMalafei.class (classId, title, chefId, date, capacity)
+VALUES (2,'Baking Basics',2,'2026-04-22',8)
+""")
 
-cursor.execute(f"INSERT INTO {PREFIX}_feedbacks.feedback VALUES (1,1,5,'Amazing')")
-cursor.execute(f"INSERT INTO {PREFIX}_feedbacks.feedback VALUES (2,2,4,'Good')")
+cursor.execute("""
+INSERT INTO MikitaMalafei.booking (bookingId, classId, userId, status)
+VALUES (1,1,101,'active')
+""")
+
+cursor.execute("""
+INSERT INTO MikitaMalafei.booking (bookingId, classId, userId, status)
+VALUES (2,2,102,'cancelled')
+""")
+
+cursor.execute("""
+INSERT INTO MikitaMalafei.feedback (feedbackId, classId, rating, comment)
+VALUES (1,1,5,'Amazing')
+""")
+
+cursor.execute("""
+INSERT INTO MikitaMalafei.feedback (feedbackId, classId, rating, comment)
+VALUES (2,2,4,'Good')
+""")
 
 conn.commit()
 conn.close()
 
-print("DB initialized successfully")
+print("DB initialized")

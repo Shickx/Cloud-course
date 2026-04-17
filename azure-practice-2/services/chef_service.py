@@ -4,8 +4,7 @@ from db import get_connection
 
 router = APIRouter()
 
-PREFIX = "s20230535"
-SCHEMA = f"{PREFIX}_chefs"
+SCHEMA = "MikitaMalafei"
 
 
 class ChefCreate(BaseModel):
