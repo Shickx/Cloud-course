@@ -1,58 +1,45 @@
-# Azure Practice 2 – FastAPI + Azure SQL
+# Azure Practice 3 — Service Bus Integration
 
-This project is a FastAPI application connected to an Azure SQL Database.  
-It demonstrates basic CRUD operations across multiple services using separate schemas.
+## Overview
+REST API with Azure Service Bus messaging.
 
----
+## Components
+- FastAPI backend
+- Azure SQL Database
+- Azure Service Bus Queue
+- Background listener (consumer thread)
 
-## 🧱 Architecture
+## Flow
+1. Client sends POST /feedbacks
+2. Backend saves data to SQL
+3. Backend sends message to Service Bus queue
+4. Listener receives and prints messages
 
-The project is split into 3 services:
+## Technologies
+- FastAPI
+- Azure SQL
+- Azure Service Bus
+- pyodbc
+- azure-servicebus
 
-### 👨‍🍳 Chef Service
-Handles chefs data:
-- Get all chefs
-- Get chef by ID
-- Create chef
+## Endpoint
 
-### 📦 Class Service
-Handles cooking classes:
-- Get all classes
-- Create class
-- Get bookings for a class
+POST /feedbacks
 
-### 💬 Feedback Service
-Handles feedback:
-- Get all feedbacks
-- Create feedback
+Example request:
+{
+  "feedbackId": 1,
+  "classId": 1,
+  "rating": 5,
+  "comment": "Great"
+}
 
----
-
-## 🗄️ Database Structure (Azure SQL)
-
-### Tables:
-
-- chefs.chef
-- classes.class
-- classes.booking
-- feedbacks.feedback
-
----
-
-## 🚀 How to run locally
-
-### 1. Activate virtual environment
-```bash
-.\venv\Scripts\activate
-
-2. Install dependencies
+## Run
 
 pip install -r requirements.txt
-
-3. Initialize database (run once)
-
-python init_db.py
-
-4. Start server
-
 uvicorn main:app --reload
+
+## Notes
+- Listener starts on app startup
+- Queue polling runs in background thread
+- Do not hardcode connection strings
