@@ -1,0 +1,19 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.11'
+
+- script: pip install -r requirements.txt
+  displayName: Install deps
+
+- script: flake8 . --max-line-length=120 --ignore=E122,E302,W292
+  displayName: Lint
+
+- script: pytest -q
+  displayName: Test
